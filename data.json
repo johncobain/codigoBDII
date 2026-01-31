@@ -1,0 +1,12 @@
+[
+  { "id": 1, "items": ["cafe", "pao", "manteiga"] },
+  { "id": 2, "items": ["leite", "cerveja", "pao", "manteiga"] },
+  { "id": 3, "items": ["cafe", "pao", "manteiga"] },
+  { "id": 4, "items": ["leite", "cafe", "pao", "manteiga"] },
+  { "id": 5, "items": ["cerveja"] },
+  { "id": 6, "items": ["manteiga"] },
+  { "id": 7, "items": ["pao"] },
+  { "id": 8, "items": ["feijao"] },
+  { "id": 9, "items": ["arroz", "feijao"] },
+  { "id": 10, "items": ["arroz"] }
+]
