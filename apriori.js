@@ -1,15 +1,28 @@
 const fs = require('fs');
+const readline = require('readline');
 
 const DATA_FILE = 'data.json';
-const MIN_SUPPORT = 0.2;
-const MIN_CONFIDENCE = 0.3;
+
+const input = (prompt) => {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+    
+    rl.question(prompt, (answer) => {
+      rl.close();
+      resolve(answer);
+    });
+  });
+};
 
 const loadData = () =>{
   try{
     raw = fs.readFileSync(DATA_FILE);
     return JSON.parse(raw);
   }catch(err){
-    console.error("Error reading data file:", err);
+    console.error("Erro ao carregar os dados:", err);
     process.exit(1);
   }
 }
@@ -29,18 +42,21 @@ const transactionsContain = (transaction, items) => {
 }
 
 const printRule = (antecedent, consequent, support, confidence) => {
-    console.log(`Regra: [${antecedent}] => [${consequent}]`);
-    console.log(`   Suporte: ${(support * 100).toFixed(1)}% | Confiança: ${(confidence * 100).toFixed(1)}%`);
-    console.log('---');
+  console.log(`Regra: [${antecedent}] => [${consequent}]`);
+  console.log(`   Suporte: ${(support * 100).toFixed(1)}% | Confiança: ${(confidence * 100).toFixed(1)}%`);
+  console.log('---');
 }
 
-const run = () => {
-  console.log("Initializing (Min Support:", MIN_SUPPORT, ", Min Confidence:", MIN_CONFIDENCE, ")");
+const run = async () => {
+  const MIN_SUPPORT = parseFloat(await input('Defina o suporte mínimo (padrão: 0.2 para 20%): ')) || 0.2;
+  const MIN_CONFIDENCE = parseFloat(await input('Defina a confiança mínima (padrão: 0.3 para 30%): ')) || 0.3;
+
+  console.log("Inicializando (Suporte Mínimo:", MIN_SUPPORT, ", Confiança Mínima:", MIN_CONFIDENCE, ")");
   
   const data = loadData();
   const totalTransactions = data.length;
 
-  console.log("Total transactions:", totalTransactions);
+  console.log("Total de transações:", totalTransactions, "\n");
 
   let allItems = new Set();
   data.forEach( t => t.items.forEach( item => allItems.add(item) ) );
@@ -53,11 +69,12 @@ const run = () => {
     const count = data.filter( t => t.items.includes(item) ).length;
     const support = count / totalTransactions;
     itemCount[item] = count;
+    console.log(`Item ${item} aparece em ${count} transações (${(support * 100).toFixed(1)}%)`);
     if(support >= MIN_SUPPORT){
       frequentItems.push(item);
     }
   });
-  console.log("Frequent items:", frequentItems);
+  console.log("\nItens frequentes:", frequentItems);
 
   const candidatePairs = getCombinations(frequentItems);
   candidatePairs.forEach( pair => {

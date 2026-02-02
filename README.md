@@ -182,13 +182,7 @@ candidatePairs.forEach( pair => {
 Para testar com seus próprios dados:
 
 1. Edite o arquivo [data.json](data.json) com suas transações
-2. Ajuste os limiares em [apriori.js](apriori.js) se necessário:
-
-   ```javascript
-   const MIN_SUPPORT = 0.2;      // Ajuste conforme necessário
-   const MIN_CONFIDENCE = 0.3;   // Ajuste conforme necessário
-   ```
-
+2. Insira os dados de suporte e confiança pelo input
 3. Execute: `node apriori.js`
 
 ## Conclusão
